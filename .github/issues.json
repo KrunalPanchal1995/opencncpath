@@ -1,0 +1,79 @@
+[
+  {
+    "title": "Fix typos and unclear sentences in the Session 1 notes",
+    "labels": [
+      "good first issue",
+      "beginner",
+      "documentation"
+    ],
+    "body": "## Problem\nThe Session 1 notes may contain typos or sentences that a first-year student finds confusing.\n\n## Context\nBeginners judge the whole repo by Session 1.\n\n## Expected outcome\nA clearer `sessions/session-01/README.md` and `lesson.py` comments.\n\n## Relevant files\n`sessions/session-01/README.md`, `sessions/session-01/lesson.py`\n\n## Acceptance criteria\n- [ ] At least three improvements\n- [ ] `python start.py test` still passes\n\n## Difficulty\nbeginner"
+  },
+  {
+    "title": "Add a G-code viewer picture to Session 2",
+    "labels": [
+      "good first issue",
+      "beginner"
+    ],
+    "body": "## Problem\nStudents write G-code but never see it drawn by a tool other than their own parser.\n\n## Context\nChecking a program with a second tool is part of good practice.\n\n## Expected outcome\nA short section and a screenshot showing the Session 2 pocket program in a free G-code viewer, with a note on any difference in the time estimate.\n\n## Relevant files\n`sessions/session-02/README.md`\n\n## Acceptance criteria\n- [ ] Screenshot and one paragraph added\n- [ ] The note states that real machines need trained operators and safety checks\n\n## Difficulty\nbeginner"
+  },
+  {
+    "title": "Add Session 4: offset any convex polygon",
+    "labels": [
+      "intermediate",
+      "feature"
+    ],
+    "body": "## Problem\nThe roadmap's first milestone does not exist yet: offsets are only implemented for rectangles.\n\n## Context\nSee `promo/roadmap.md`, Session 4.\n\n## Expected outcome\n`sessions/session-04/` with README (sections A to F), lesson, checkpoint, exercises and app in the same style as Sessions 1 to 3.\n\n## Relevant files\n`promo/roadmap.md`, `sessions/session-02/lesson.py`\n\n## Acceptance criteria\n- [ ] Checkpoint prints PASS and the roadmap checkpoint is met\n- [ ] Added to the tests\n\n## Difficulty\nintermediate"
+  },
+  {
+    "title": "Add Session 5: contour-parallel pocket with a boss",
+    "labels": [
+      "intermediate",
+      "feature"
+    ],
+    "body": "## Problem\nSession 3 clears the boss pocket with a raster that lifts over the boss; rings that bend round it would be faster.\n\n## Context\nRoadmap Session 5.\n\n## Expected outcome\nA lesson and app that build rings from the distance-to-wall field and report time and removed volume.\n\n## Relevant files\n`sessions/session-03/lesson.py`, `promo/roadmap.md`\n\n## Acceptance criteria\n- [ ] Roadmap checkpoint met (time and volume)\n- [ ] Checkpoint added\n\n## Difficulty\nintermediate"
+  },
+  {
+    "title": "Reproduce the Target: planner and simulator with counters",
+    "labels": [
+      "advanced",
+      "feature"
+    ],
+    "body": "## Problem\nThe Target animation shows rings round two bosses, chip counters and a trade-off curve; there is no public implementation.\n\n## Context\nThe code behind the Target is private on purpose. The roadmap gives the path.\n\n## Expected outcome\nYour own implementation, written from the roadmap, plus an animation like the Target.\n\n## Relevant files\n`promo/roadmap.md`\n\n## Acceptance criteria\n- [ ] Rest machining reduces the corner leftover as in the roadmap\n- [ ] Short write-up of your method\n\n## Difficulty\nadvanced"
+  },
+  {
+    "title": "Translate the Session 1 notes into Hindi",
+    "labels": [
+      "good first issue",
+      "beginner",
+      "documentation"
+    ],
+    "body": "## Problem\nStudents who prefer Hindi cannot read Session 1 comfortably.\n\n## Context\nThis project teaches first- and second-year students across India; translations widen who can join.\n\n## Expected outcome\n`sessions/session-01/README.hi.md` with a faithful Hindi translation of sections A to F, linked from the main README.\n\n## Relevant files\n`sessions/session-01/README.md`\n\n## Acceptance criteria\n- [ ] All sections translated\n- [ ] Equations, code blocks and file names unchanged\n- [ ] Link added to the main README\n\n## Difficulty\nbeginner"
+  },
+  {
+    "title": "Translate the Session 1 notes into Telugu",
+    "labels": [
+      "good first issue",
+      "beginner",
+      "documentation"
+    ],
+    "body": "## Problem\nStudents who prefer Telugu cannot read Session 1 comfortably.\n\n## Context\nThis project teaches first- and second-year students across India; translations widen who can join.\n\n## Expected outcome\n`sessions/session-01/README.te.md` with a faithful Telugu translation of sections A to F, linked from the main README.\n\n## Relevant files\n`sessions/session-01/README.md`\n\n## Acceptance criteria\n- [ ] All sections translated\n- [ ] Equations, code blocks and file names unchanged\n- [ ] Link added to the main README\n\n## Difficulty\nbeginner"
+  },
+  {
+    "title": "Translate the Session 1 notes into Tamil",
+    "labels": [
+      "good first issue",
+      "beginner",
+      "documentation"
+    ],
+    "body": "## Problem\nStudents who prefer Tamil cannot read Session 1 comfortably.\n\n## Context\nThis project teaches first- and second-year students across India; translations widen who can join.\n\n## Expected outcome\n`sessions/session-01/README.ta.md` with a faithful Tamil translation of sections A to F, linked from the main README.\n\n## Relevant files\n`sessions/session-01/README.md`\n\n## Acceptance criteria\n- [ ] All sections translated\n- [ ] Equations, code blocks and file names unchanged\n- [ ] Link added to the main README\n\n## Difficulty\nbeginner"
+  },
+  {
+    "title": "Translate the Session 1 notes into Malayalam",
+    "labels": [
+      "good first issue",
+      "beginner",
+      "documentation"
+    ],
+    "body": "## Problem\nStudents who prefer Malayalam cannot read Session 1 comfortably.\n\n## Context\nThis project teaches first- and second-year students across India; translations widen who can join.\n\n## Expected outcome\n`sessions/session-01/README.ma.md` with a faithful Malayalam translation of sections A to F, linked from the main README.\n\n## Relevant files\n`sessions/session-01/README.md`\n\n## Acceptance criteria\n- [ ] All sections translated\n- [ ] Equations, code blocks and file names unchanged\n- [ ] Link added to the main README\n\n## Difficulty\nbeginner"
+  }
+]
