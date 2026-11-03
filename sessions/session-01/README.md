@@ -22,7 +22,7 @@
 A plotter draws by moving a pen to coordinates. A CNC (computer numerical control) milling machine does the same with a spinning cutter that carves material instead of ink. To carve a square pocket, the machine needs a list of points for the cutter centre, not for the wall. Where must the centre go so that the cutter edge just touches the wall, and how long does one lap take? Educational geometry only: real machining needs trained operators, machine-specific post-processing and safety checks.
 
 ## B. Concept and theory
-The cutter is a disc of diameter d, radius r = d/2, seen from above. If its edge must touch the wall, its centre must stay r away from the wall: the centre path is the wall moved inwards by r, a smaller square of side (side - 2r) = (side - d). The disc removes everything within r of its centre, so one lap clears a strip of width 2r = d along each wall (the four inside corners stay slightly rounded). What is left in the middle is an island, a square of side (side - 4r) = (side - 2d) if that is positive. The feed F is the speed along the path in mm per minute, so a path of length L takes L / F minutes.
+The cutter is a disc of diameter d, radius r = d/2, seen from above. If its edge must touch the wall, its centre must stay r away from the wall: the centre path is the wall moved inwards by r, a smaller square of side (side - 2r) = (side - d). The disc removes everything within r of its centre, so one lap clears a strip of width 2r = d along each wall (the four inside corners stay slightly rounded). What is left in the middle is an island, a square of side (side - 4r) = (side - 2d) if that is positive (otherwise one lap clears the whole pocket). The feed F is the speed along the path in mm per minute, so a path of length L takes L / F minutes, which is 60 L / F seconds.
 
 | Symbol | Meaning | Unit |
 |---|---|---|
@@ -90,6 +90,7 @@ Where is the cutter edge relative to its centre? How far from the path does the 
 The cutter edge is one radius from its centre, so for the edge to touch the wall the centre must be one radius from the wall. The cutter only removes material within one radius of its centre, so a single lap clears a strip of width 2r = d along the wall; if the pocket is wider than 4r, the middle is out of reach and remains as an island.
 
 </details>
+
 **Question type B: Numerical.** A 30 mm square pocket is cut with a 6 mm cutter at 150 mm/min. Find the path length, the time for one lap and the island side.
 
 <details>
@@ -105,6 +106,7 @@ L = 4 (side - d); t = L / F * 60; island = side - 2d.
 L = 4 * (30 - 6) = 96 mm. Time = 96 / 150 * 60 = 38.4 s. Island side = 30 - 12 = 18 mm. Sanity check: a bit more than 3 times the pocket side for the path, and a slow feed (150 mm/min is 2.5 mm per second) gives tens of seconds.
 
 </details>
+
 **Question type C: Graph and simulation interpretation.** In the time graph the curve falls as the feed rises. If the feed is halved from 120 to 60 mm/min for the 64 mm path, what happens to the time? What does the curve shape say?
 
 <details>
@@ -120,6 +122,7 @@ t = L / F * 60.
 The time doubles from 32 s to 64 s. The curve is a hyperbola (time inversely proportional to feed): steep at low feeds, flat at high feeds, so the first increases in feed save the most time.
 
 </details>
+
 **Question type D: Design and optimisation challenge.** Design: choose a cutter diameter and a feed to clear a 20 mm pocket in one lap, with no island, in under 20 s. Is there a limit on the feed?
 
 <details>
@@ -142,7 +145,7 @@ Score yourself with [RUBRIC.md](../../RUBRIC.md). Print the [activity sheet](act
 | Common misconception | What is actually true |
 |---|---|
 | The cutter centre follows the wall. | The centre follows a path one radius inside the wall; the edge follows the wall. |
-| One lap clears the whole pocket. | One lap clears a strip of width equal to the cutter diameter on each side; a pocket wider than 4 radii keeps an island. |
+| One lap clears the whole pocket. | One lap clears a strip of width equal to the cutter diameter on each side; a pocket wider than 4 radii (two cutter diameters) keeps an island. |
 | Feed is how fast the spindle turns. | Feed is the speed of the cutter along the path (mm/min); the spindle speed is a different number (rev/min). |
 | A bigger cutter always means a longer job. | A bigger cutter follows a smaller square, so the lap is shorter; the limit is that it must fit the pocket and the corners. |
 
