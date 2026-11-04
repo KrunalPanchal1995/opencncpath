@@ -2,16 +2,6 @@
 
 This is the path, not the code. Each milestone says what you learn, what you build, and how you know it works. Pick one and open a pull request. See [CONTRIBUTING.md](../CONTRIBUTING.md).
 
-## Session 5: Contour-parallel pocket with a boss
-
-**You will learn:** Level sets of the distance-to-wall field give rings that bend round bosses; join them without lifting the cutter.
-
-**You will build:** A planner that clears the boss pocket with continuous rings and one plunge per layer.
-
-**Checkpoint (not met by the shipped code):** The boss pocket cutting time (G1, G2, G3 and plunge moves) is under 200 s and the simulated volume is within 0.5 percent of 5395.9 mm^3, with no retract inside a layer (the shipped program needs 315.5 s of cutting).
-
-**Difficulty:** intermediate
-
 ## Session 6: Rest machining of the corners
 
 **You will learn:** A second, smaller cutter removes what the first one could not reach.
