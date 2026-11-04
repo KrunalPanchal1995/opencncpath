@@ -10,7 +10,7 @@
 \setlength{\parindent}{0pt}
 \begin{document}
 
-\begin{center}{\LARGE\bfseries opencncpath}\\[0.4em]{\large Turn a drawing into a CNC toolpath, in three sessions.}\\[0.2em]\small PAN IIT OSS explainer \textbullet{} diploma / undergraduate to advanced undergraduate (levels 5-6)\end{center}
+\begin{center}{\LARGE\bfseries opencncpath}\\[0.4em]{\large Turn a drawing into a CNC toolpath, in four sessions.}\\[0.2em]\small PAN IIT OSS explainer \textbullet{} diploma / undergraduate to advanced undergraduate (levels 5-6)\end{center}
 
 \section*{Why this exists}
 Every machined part starts as a drawing and ends as a list of coordinates that a cutter follows. This explainer shows the geometry in between, offsets, arcs, stepovers and a height-map check, using only simple formulas, so you can build it yourself.
@@ -18,11 +18,12 @@ Every machined part starts as a drawing and ends as a list of coordinates that a
 \section*{The end goal}
 Turn a drawing into a CNC toolpath. The end goal is to turn a drawing into a CNC toolpath: the planning step that CAM software does for machining. This repo teaches the geometry only; real machining needs trained operators, machine-specific post-processing and safety checks.
 
-\section*{How the three sessions build up}
+\section*{How the four sessions build up}
 \begin{enumerate}[nosep]
 \item \textbf{Session 1: A cutter follows a path} (Level 1, conceptual interactive model, 60 min).
 \item \textbf{Session 2: G-code, offsets and arcs} (Level 2, mathematical engineering model, 75 min).
 \item \textbf{Session 3: Pocketing strategies and a simulation that checks them} (Level 3, simulation and validation, 90 min).
+\item \textbf{Session 4: Offset any convex polygon} (Level 3, simulation and validation, 90 min).
 \end{enumerate}
 
 \section{Session 1: A cutter follows a path}
@@ -198,12 +199,68 @@ A ball-end cutter of radius 3 mm makes parallel passes 2 mm apart. Find the ridg
 \item \textbf{Design and optimisation challenge.} Design: a ball-end cutter of radius 4 mm must finish a 40 x 30 mm face with a ridge of at most 0.02 mm at 600 mm/min. Choose a stepover (rounded down to 0.01 mm), count the lines and estimate the time. Lines run along the 40 mm side, plus 30 mm of side-steps in total.
 \end{enumerate}
 
+\section{Session 4: Offset any convex polygon}
+
+\subsection*{A. Real-world problem}
+Sessions 2 and 3 could offset only a rectangle: shrink each side by the cutter radius. A hexagonal pocket (a nut seat, a bolt-head recess) has six sides at 120 degrees, and the rectangle recipe does not carry over. How far does each corner of the cutter-centre path move? What happens when the offset is larger than the pocket allows? Can the same idea give a complete pocket path? Today we offset a convex polygon edge by edge, find the distance at which the offset collapses, repair the case where one edge disappears before the others, and cut a hexagonal pocket whose G-code we read back and simulate. Educational toolpath geometry only.
+
+\subsection*{B. Concept and theory}
+A convex polygon is listed counter-clockwise, so that its inside is on the left of every edge, and every turn is to the left. At a corner the interior angle theta is the angle between the two edges, measured inside. The \textbf{inward offset} by d moves every edge d along its inward normal; two neighbouring shifted lines meet in a new corner. That corner lies on the bisector of the old one, d / sin(theta / 2) away from it. Each edge keeps its direction and changes its length to L' = L - d (cot(theta\_a / 2) + cot(theta\_b / 2)), and while no edge has vanished the area is A(d) = A - P d + d\textasciicircum{}2 sum of cot(theta\_i / 2), with P the perimeter. For the hexagon of side 20 mm and d = 3 mm the corner shift is 3.464 mm, the new side is 16.536 mm and the area is 710.41 mm\textasciicircum{}2.
+
+The recipe breaks when an edge reaches length zero before the others: the two neighbouring shifted lines then cross behind each other and the result has a reversed edge. The correct offset is the \textbf{intersection of the shifted half-planes}: the part of the polygon that is at least d from every edge line. We compute it by clipping the polygon against one shifted line after another. An edge that vanishes simply drops out; when nothing is left the offset has \textbf{collapsed}. The collapse distance is the radius of the largest circle inside the polygon; for a regular polygon it is the apothem a / (2 tan(pi / n)), 17.32 mm for the hexagon of side 20 mm.
+
+A cutter of diameter D (radius r) keeps its centre at least r from every wall, so its centre path is the polygon offset by r. To clear the pocket, cut rings at the offsets r, r + s, ... up to the collapse distance rho, with the stepover s at most D: n = ceil((rho - r) / s) + 1 rings, spaced evenly so that the last ring sits exactly at the collapse. The rings are cut from the wall inwards and joined by short straight links inside the area already cleared, so the cutter plunges once per layer. A round cutter cannot reach into a sharp corner: each corner of interior angle theta keeps r\textasciicircum{}2 (cot(theta / 2) - (pi - theta) / 2) of leftover area.
+
+\begin{itemize}[nosep]
+\item d: inward offset distance (mm)
+\item theta: interior angle at a corner (radians)
+\item L, L': edge length before and after the offset (mm)
+\item A, P: polygon area and perimeter (mm\textasciicircum{}2 and mm)
+\item rho: collapse distance (inscribed-circle radius) (mm)
+\item r, D: cutter radius and diameter (mm)
+\item s: stepover between rings (mm)
+\end{itemize}
+
+\begin{equation*}
+\Delta_{\text{corner}}=\frac{d}{\sin(\theta/2)},\qquad L'=L-d\left(\cot\frac{\theta_a}{2}+\cot\frac{\theta_b}{2}\right),\qquad A(d)=A-Pd+d^{2}\sum_i\cot\frac{\theta_i}{2}
+\end{equation*}
+
+\begin{equation*}
+\rho_{\text{regular}}=\frac{a}{2\tan(\pi/n)},\qquad n_{\text{rings}}=\left\lceil\frac{\rho-r}{s}\right\rceil+1,\qquad \text{leftover per corner}=r^{2}\left(\cot\frac{\theta}{2}-\frac{\pi-\theta}{2}\right)
+\end{equation*}
+
+\begin{center}\includegraphics[width=0.95\linewidth]{figures/s04_offsets_and_vanishing_edge.png}\\\small Hexagon offsets, and a trapezoid whose top edge vanishes before the collapse.\end{center}
+
+\begin{center}\includegraphics[width=0.6\linewidth]{figures/s04_area_vs_offset.png}\\\small Area of the offset hexagon: clipping and formula.\end{center}
+
+\begin{center}\includegraphics[width=0.95\linewidth]{figures/s04_hexagon_pocket.png}\\\small The ring path of the hexagon pocket and the simulated height-map.\end{center}
+
+\subsection*{E. Worked example}
+A regular hexagon has side 20 mm. Offset it inwards by 3 mm. Find the corner shift, the new side length, the new area and the distance at which the offset collapses.
+\begin{enumerate}[nosep]
+\item The interior angle is 120 degrees, so theta / 2 = 60 degrees.
+\item The corner shift is d / sin 60 = 3 / 0.8660 = 3.4641 mm.
+\item The new side is 20 - 3 (cot 60 + cot 60) = 20 - 3 x 1.1547 = 16.5359 mm.
+\item The new area is (3 sqrt 3 / 2) x 16.5359\textasciicircum{}2 = 710.41 mm\textasciicircum{}2; the formula gives 1039.23 - 120 x 3 + 9 x 6 x 0.5774 = 710.41 mm\textasciicircum{}2.
+\item The offset collapses at the apothem 20 / (2 tan 30) = 17.3205 mm; for a larger d nothing is left.
+\end{enumerate}
+\textbf{Answer.} The corners move 3.464 mm, the new side is 16.536 mm, the new area is 710.41 mm\textasciicircum{}2 and the collapse is at 17.32 mm.
+
+\subsection*{F. Questions}
+\begin{enumerate}[nosep]
+\item \textbf{Conceptual.} Why does a corner of the offset hexagon move by more than the offset distance, and why does the edge-by-edge recipe work for the hexagon but fail for the trapezoid of Figure 1?
+\item \textbf{Numerical.} A regular octagon has side 10 mm. Offset it inwards by 2 mm. Find the interior angle, how far the corners move, the new side length, the area of the offset octagon and the distance at which it collapses.
+\item \textbf{Graph and simulation interpretation.} In the right panel of Figure 1 (and in the app, with the trapezoid and d = 6 mm) the dashed outline has a small hook at the top. What went wrong, and how far from the right-hand wall are the two hook corners? What would a cutter of radius 6 mm do if it followed that outline?
+\item \textbf{Design and optimisation challenge.} Design: a hexagonal recess for a nut, 24 mm across the flats, 5 mm deep, to be cut with a 6 mm cutter. Plan it: the side length, the number of rings for a stepover of 40 percent of the diameter, the layers, the cutting time (feed 300 mm/min, plunge 100 mm/min), and what the nut will see in the corners.
+\end{enumerate}
+
 \section{Real-world mini-project}
 \textbf{Generate G-code for a pocket with a boss and check it.} A 40 x 30 mm pocket, 5 mm deep, has a round boss of diameter 12 mm in the middle at (20, 15) that must stay. Use a 6 mm flat cutter, 2 mm depth of cut per layer, stepover 4 mm, feed 300 mm/min, plunge 100 mm/min and rapids at 3000 mm/min. Use \texttt{boss\_pocket\_gcode} from Session 3, parse the text back with \texttt{read\_moves}, simulate it on a height-map with \texttt{simulate\_moves}, and compare the removed volume with the analytic volume.
 
+\textbf{Offset any convex polygon and cut a hexagonal pocket.} Use the lesson's \texttt{offset\_polygon}, \texttt{collapse\_distance}, \texttt{ring\_offsets}, \texttt{pocket\_path} and \texttt{pocket\_gcode}. The roadmap target is that every corner of the offset hexagon (side 20 mm, offset 3 mm) lies 3 mm from its two neighbouring edges within 1e-6 mm (the shipped Sessions 2 and 3 code offsets only rectangles). \textbf{Deliverable:} A script that returns the inward offset of any convex polygon (or None when it has collapsed), checks every corner of the offset hexagon against its two neighbouring edges, prints the collapse distance and the first distance at which an edge vanishes, writes the G-code of a hexagonal pocket (side 20 mm, 5 mm deep, 6 mm cutter, stepover 4 mm, depth of cut 2 mm), reads it back, and compares the simulated volume with the analytic one. It saves the graph of the offsets. \textbf{Success looks like:} The six corners of the offset hexagon are 3 mm from their two neighbouring edges to within 5e-15 mm (needed: 1e-6 mm) and farther from the other four. The collapse is at 17.3205 mm, the apothem. The trapezoid loses its top edge at 4.49 mm and collapses at 8.91 mm; at 6 mm the edge-by-edge outline has a reversed edge of -1.34 mm and an area of 46.845 mm\textasciicircum{}2, against 47.347 mm\textasciicircum{}2 for the triangle from clipping. The pocket has 5 rings at offsets 3.0, 6.58, 10.16, 13.74 and 17.32 mm, a path of 264.6 mm per layer, 3 layers with 3 plunges, a cutting time of 166.5 s (167.9 s with rapids), a simulated volume of 5182.7 mm\textasciicircum{}3 against 5181.6 mm\textasciicircum{}3 analytic (+0.02 percent) and 2.90 mm\textasciicircum{}2 of corner leftover.
+
 \section{The path ahead}
 \begin{enumerate}[nosep]
-\item \textbf{Session 4: Offset any convex polygon.} A function that returns the inward offset of a convex polygon and a pocket path for a hexagon.
 \item \textbf{Session 5: Contour-parallel pocket with a boss.} A planner that clears the boss pocket with continuous rings and one plunge per layer.
 \item \textbf{Session 6: Rest machining of the corners.} A second pass with a 2 mm cutter that follows the corner leftover left by the 6 mm cutter.
 \item \textbf{Session 7: 3D ball-end finishing.} Parallel finishing passes over a hemisphere of radius 15 mm with a ball cutter of radius 3 mm, simulated on a 3D height-map.
@@ -234,6 +291,14 @@ A ball-end cutter of radius 3 mm makes parallel passes 2 mm apart. Find the ridg
 \item \textbf{Numerical.} Hint: f\_z = F / (N z); MRR = a\_e a\_p F. Solution: f\_z = 480 / (8000 * 2) = 0.03 mm per tooth. MRR = 3 * 1.5 * 400 = 1800 mm\textasciicircum{}3/min. Units: mm/min divided by rev/min times teeth gives mm per tooth; mm * mm * mm/min gives mm\textasciicircum{}3/min. These are teaching numbers, not recommended cutting conditions.
 \item \textbf{Graph and simulation interpretation.} Hint: The curve is 4 r\textasciicircum{}2 (1 - pi/4). Solution: About 7.73 mm\textasciicircum{}2 at 3 mm and 21.46 mm\textasciicircum{}2 at 5 mm. The curve rises with the square of r: doubling the radius quadruples the leftover (3.43 mm\textasciicircum{}2 at r = 2 and 13.73 mm\textasciicircum{}2 at r = 4 also follow the formula). A bigger cutter clears faster but leaves bigger corner fillets, so a smaller cutter is needed to finish the corners (rest machining).
 \item \textbf{Design and optimisation challenge.} Hint: Use s = 2 sqrt(2 r h - h\textasciicircum{}2), then n = ceil(30 / s) + 1 and length = 40 n + 30. Solution: s = 2 sqrt(2 * 4 * 0.02 - 0.0004) = 2 sqrt(0.1596) = 0.7990 mm, so use 0.79 mm. Lines n = ceil(30 / 0.79) + 1 = 39. Length = 39 * 40 + 30 = 1590 mm. Time = 1590 / 600 * 60 = 159.0 s. Trade-off: a finer ridge needs many more lines and more time; a coarser stepover is faster but the surface is rougher.
+\end{enumerate}
+
+\subsection*{Session 4}
+\begin{enumerate}[nosep]
+\item \textbf{Conceptual.} Hint: Where is the point that is exactly d from both edges at a corner? Then compare when each edge of the two shapes reaches length zero. Solution: The new corner is the point at distance d from both edges, and it lies on the bisector of the corner, d / sin(theta / 2) away from the old one. The sharper the corner, the further it moves: 3.46 mm for the 120 degree corners of the hexagon at d = 3 mm, 4.24 mm for a square corner. Each edge also shortens by d (cot(theta\_a / 2) + cot(theta\_b / 2)). The recipe (shift every edge, intersect neighbours) is right as long as every edge still has positive length. In a regular polygon all edges reach length zero at the same distance, the collapse at the apothem, so the recipe holds up to the collapse. In the trapezoid the short top edge (4 mm) reaches zero at d = 4.49 mm, long before the collapse at 8.91 mm; beyond that the neighbouring lines cross behind each other, the top edge is reversed and the result is wrong. Clipping the polygon against the shifted half-planes has no such limit, because an edge that vanishes simply drops out.
+\item \textbf{Numerical.} Hint: The interior angle of a regular n-gon is 180 - 360 / n degrees. Use d / sin(theta / 2), L - 2 d cot(theta / 2) and A - P d + d\textasciicircum{}2 sum cot(theta / 2). Solution: Interior angle 135 degrees, so theta / 2 = 67.5 degrees. Corner shift = 2 / sin 67.5 = 2.165 mm. New side = 10 - 2 x 2 x cot 67.5 = 10 - 4 x 0.4142 = 8.343 mm. The octagon has area A = 2 (1 + sqrt 2) x 100 = 482.84 mm\textasciicircum{}2 and perimeter P = 80 mm; sum of cot(theta / 2) over 8 corners = 3.314. A(2) = 482.84 - 80 x 2 + 4 x 3.314 = 336.10 mm\textasciicircum{}2, which equals 2 (1 + sqrt 2) x 8.343\textasciicircum{}2 = 336.10. It collapses at the apothem a / (2 tan(pi / 8)) = 10 / (2 x 0.4142) = 12.07 mm.
+\item \textbf{Graph and simulation interpretation.} Hint: Each corner of the dashed outline is the intersection of two shifted lines. Which wall's shifted line is it not on? Solution: At d = 6 mm the top edge has already vanished (it did so at 4.49 mm), so the two shifted slanted lines cross below the shifted top line. The corners of the dashed outline are the intersections of the shifted top line with one shifted slanted line each: (19.33, 14) is 6 mm from the top and from the left wall but only 5.00 mm from the right-hand wall, and (20.67, 14) is the mirror image. A cutter of radius 6 mm centred there reaches 1.0 mm into the wall: a gouge. The top edge of the dashed outline is also reversed (length -1.34 mm), which is the hook. The correct offset is the triangle with its apex at (20, 13.25), 6 mm from all three walls.
+\item \textbf{Design and optimisation challenge.} Hint: Across the flats is twice the apothem. Use n = ceil((rho - r) / s) + 1 rings, and the corner leftover r\textasciicircum{}2 (cot(theta / 2) - (pi - theta) / 2) per corner. Solution: Across the flats 24 mm means apothem 12 mm, so the side is 24 tan 30 = 13.86 mm and the pocket collapses at 12 mm. The cutter radius is 3 mm and the stepover is 0.4 x 6 = 2.4 mm. Rings: n = ceil((12 - 3) / 2.4) + 1 = 5 at offsets 3, 5.25, 7.5, 9.75 and 12 mm (spacing 2.25 mm, below 2.4). One layer is 166.3 mm of path; with 3 layers (5 mm at a depth of cut of 2 mm) the simulated program takes about 109 s including rapids, and removes 2480 mm\textasciicircum{}3 (analytic 2479.6). The six corners keep 2.90 mm\textasciicircum{}2 of leftover, a corner radius of about 3 mm, so a nut with sharp corners will not sit fully down. Options: a smaller cutter for a rest pass (the roadmap's Session 6), or accept the radius if the nut's corners are chamfered. The largest cutter that fits (24 mm) would give a single ring but about 11.6 mm\textasciicircum{}2 of leftover, which is why the cutter is chosen from the corner tolerance, not from the largest circle.
 \end{enumerate}
 
 \section{How to join}

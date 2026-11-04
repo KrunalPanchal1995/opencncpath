@@ -1,7 +1,7 @@
 [project]
 name = "opencncpath"
 version = "0.1.0"
-description = "Learn how a CNC machine follows a toolpath: G-code, offsets, pocketing and a simulation that checks the result, from scratch in 3 sessions."
+description = "Learn how a CNC machine follows a toolpath: G-code, offsets, pocketing and a simulation that checks the result, from scratch in 4 sessions."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

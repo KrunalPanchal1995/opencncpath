@@ -2,18 +2,18 @@
 
 [![Checks](https://github.com/KrunalPanchal1995/opencncpath/actions/workflows/ci.yml/badge.svg)](https://github.com/KrunalPanchal1995/opencncpath/actions/workflows/ci.yml) ![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square) ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square) [![Open in Colab](https://img.shields.io/badge/Colab-session%201-F9AB00?style=flat-square&logo=googlecolab&logoColor=white)](https://colab.research.google.com/github/KrunalPanchal1995/opencncpath/blob/main/sessions/session-01/lesson.ipynb) [![Live apps](https://img.shields.io/badge/live-apps-1f6feb?style=flat-square)](https://krunalpanchal1995.github.io/opencncpath/)
 
-**Turn a drawing into a CNC toolpath, in three sessions.**
+**Turn a drawing into a CNC toolpath, in four sessions.**
 
 opencncpath teaches how a cutter path is built from an outline: offsets, G-code, arcs, stepover and a height-map check, using only Python and a browser.
 
 - **Start from zero.** Session 1 needs only a ruler's worth of geometry: a path, a radius and a speed.
 - **See it cut.** Every session ships a slider app that runs in the browser, with labelled graphs.
 - **Know you got it right.** Each session ends with a checkpoint that prints PASS or FAIL against hand calculations and a simulation.
-- **Build the missing half.** The repo stops at Session 3 on purpose; the roadmap shows the path to the Target.
+- **Build the missing half.** The repo stops at Session 4 on purpose; the roadmap shows the path to the Target.
 
 [Target](#the-target) · [Who is this for](#who-is-this-for) · [Quick start](#quick-start) · [Sessions](#sessions) · [Roadmap](#roadmap) · [Contribute](#contribute) · [Explainer PDF](docs/explainer.pdf)
 
-> **This repo is incomplete on purpose.** Sessions 1 to 3 are here and fully working. The finished Target below is a preview of what the community can build next. We show you the path, not the code. Sessions 4 and up are yours.
+> **This repo is incomplete on purpose.** Sessions 1 to 4 are here and fully working. The finished Target below is a preview of what the community can build next. We show you the path, not the code. Sessions 5 and up are yours.
 
 ## The Target
 
@@ -79,8 +79,9 @@ Every session also opens in your browser with sliders (no install): [live apps](
 | 1 | [A cutter follows a path](sessions/session-01/README.md) | Level 1: conceptual interactive model | 60 min | [open](https://krunalpanchal1995.github.io/opencncpath/session-01/) |
 | 2 | [G-code, offsets and arcs](sessions/session-02/README.md) | Level 2: mathematical engineering model | 75 min | [open](https://krunalpanchal1995.github.io/opencncpath/session-02/) |
 | 3 | [Pocketing strategies and a simulation that checks them](sessions/session-03/README.md) | Level 3: simulation and validation | 90 min | [open](https://krunalpanchal1995.github.io/opencncpath/session-03/) |
+| 4 | [Offset any convex polygon](sessions/session-04/README.md) | Level 3: simulation and validation | 90 min | [open](https://krunalpanchal1995.github.io/opencncpath/session-04/) |
 
-Each session follows the same six steps: A real-world problem, B concept and theory, C visual explanation, D interactive simulation, E worked example and experiment, F assessment and design challenge. Each ends with `checkpoint.py`, which prints `PASS` or `FAIL` against reference numbers. Session 3 also contains the real-world mini-project: **Generate G-code for a pocket with a boss and check it**.
+Each session follows the same six steps: A real-world problem, B concept and theory, C visual explanation, D interactive simulation, E worked example and experiment, F assessment and design challenge. Each ends with `checkpoint.py`, which prints `PASS` or `FAIL` against reference numbers. Session 3 also contains the real-world mini-project: **Generate G-code for a pocket with a boss and check it**; Session 4 adds **Offset any convex polygon and cut a hexagonal pocket**.
 
 ## Architecture
 
@@ -89,14 +90,15 @@ flowchart LR
   S1[Session 1<br/>A cutter follows a path]
   S2[Session 2<br/>G-code, offsets and arcs]
   S3[Session 3<br/>Pocketing strategies and a simulation that checks them]
-  R[Roadmap S4+<br/>YOU build this]
+  S4[Session 4<br/>Offset any convex polygon]
+  R[Roadmap S5+<br/>YOU build this]
   T((Target))
-  S1 --> S2 --> S3 --> R --> T
+  S1 --> S2 --> S3 --> S4 --> R --> T
 ```
 
 | Folder or file | What is inside |
 |---|---|
-| `sessions/` | three sessions: README (A-F), `lesson.py`, notebook, live app, exercises, activity sheet, checkpoint |
+| `sessions/` | four sessions: README (A-F), `lesson.py`, notebook, live app, exercises, activity sheet, checkpoint |
 | `promo/` | the Target: media, live links, and the roadmap (path only) |
 | `docs/` | `explainer.tex` and the built `explainer.pdf` |
 | `tests/` | runs every lesson and checkpoint headless |
@@ -108,7 +110,6 @@ flowchart LR
 
 | Milestone | What you will build | Difficulty |
 |---|---|---|
-| Session 4: Offset any convex polygon | A function that returns the inward offset of a convex polygon and a pocket path for a hexagon. | intermediate |
 | Session 5: Contour-parallel pocket with a boss | A planner that clears the boss pocket with continuous rings and one plunge per layer. | intermediate |
 | Session 6: Rest machining of the corners | A second pass with a 2 mm cutter that follows the corner leftover left by the 6 mm cutter. | advanced |
 | Session 7: 3D ball-end finishing | Parallel finishing passes over a hemisphere of radius 15 mm with a ball cutter of radius 3 mm, simulated on a 3D height-map. | advanced |

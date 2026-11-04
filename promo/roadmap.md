@@ -2,16 +2,6 @@
 
 This is the path, not the code. Each milestone says what you learn, what you build, and how you know it works. Pick one and open a pull request. See [CONTRIBUTING.md](../CONTRIBUTING.md).
 
-## Session 4: Offset any convex polygon
-
-**You will learn:** How to offset a polygon inwards by a distance, edge by edge, and when the offset collapses.
-
-**You will build:** A function that returns the inward offset of a convex polygon and a pocket path for a hexagon.
-
-**Checkpoint (not met by the shipped code):** Every vertex of the offset hexagon (side 20 mm, offset 3 mm) lies 3 mm from its two neighbouring edges within 1e-6 mm (the shipped code only offsets rectangles).
-
-**Difficulty:** intermediate
-
 ## Session 5: Contour-parallel pocket with a boss
 
 **You will learn:** Level sets of the distance-to-wall field give rings that bend round bosses; join them without lifting the cutter.
