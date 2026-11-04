@@ -58,7 +58,7 @@ The first figure shows a 20 mm square pocket with a 4 mm cutter: the black wall,
 *A 20 mm pocket: the wall, the cutter centre path (2 to 18 mm), the cutter and the 12 mm island.*
 
 ## D. Interactive simulation
-Run the lesson (`python start.py 1`), then open the live app: [Session 1: a cutter follows a path](https://krunalpanchal1995.github.io/opencncpath/session-01/) (or `app.html` in this folder). Change the pocket size, the cutter diameter and the feed. Watch the dashed path and the green island change, then switch to the time view and see time fall as the feed rises.
+Run the lesson (`python start.py 1`), then open the live app: [Session 1: a cutter follows a path](https://krunalpanchal1995.github.io/opencncpath/session-01/) (or `app.html` in this folder). Change the pocket size, the cutter diameter and the feed. Watch the dashed path and the orange island change, then switch to the time view and see time fall as the feed rises.
 
 **Challenge.** Clear a 20 mm pocket completely in one lap (no island) in under 20 s.
 
